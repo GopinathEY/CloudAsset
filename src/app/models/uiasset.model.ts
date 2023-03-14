@@ -11,17 +11,6 @@ export interface Parameters {
   traefik:      false;
   kong:    false;
   haProxy: false;
-  istio:      false;
-  linkerd:      false;
-  consulConnect:        false;
-  kuma:      false;
-  kubebench:      false;
-  kubeval:    false;
-  kubehunter: false;
-  sonobuoy:      false;
-  prometheus:      false;
-  filebeat:        false;
-  zabbix:      false;
   sensu:        false;
 }
 export interface Resources {
