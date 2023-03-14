@@ -1,0 +1,618 @@
+<div class="card m-3">
+  <h5 class="card-header text-center">K8s Configuration</h5>
+    <form [formGroup]="registerForm" (ngSubmit)="onSubmit(registerForm.value)">
+      <!-- Tools Fields-->
+      <div class="card-body">
+          <tr>
+            <label class="bolded" style="text-align: left">Tools :</label>
+          </tr>
+          <tr>
+            <td>
+              <label class="form-label">Ingress </label>
+            </td>
+            <td>
+              <ng-select
+                [items]="ingressList"
+                bindLabel="name"
+                bindValue="id"
+                type="dropdown"
+                formControlName="ingress"
+                placeholder="-- Select --"
+              >
+              </ng-select>
+            </td>
+          </tr>
+          <tr>
+            <td>
+              <label class="form-label">Service Mesh </label>
+            </td>
+            <td>
+              <ng-select
+                [items]="serviceMeshList"
+                formControlName="serviceMesh"
+                bindLabel="name"
+                bindValue="id"
+                type="dropdown"
+                placeholder="-- Select --"
+              ></ng-select>
+            </td>
+          </tr>
+          <tr>
+            <td>
+              <label class="form-label">Cluster validation</label>
+            </td>
+            <td>
+              <ng-select
+                placeholder="-- Select multiple --"
+                [items]="clusterValList"
+                bindLabel="name"
+                bindValue="id"
+                formControlName="clusterVal"
+                (change)="itemSelected($event)"
+                [multiple]="true"
+                [closeOnSelect]="true"
+                [ngClass]="{
+                  'is-invalid': submitted && f.clusterVal.errors && f.clusterVal.invalid
+                }"
+              >
+              </ng-select>
+
+              <!-- <select
+              class="custom-select mb-3"
+              (change)="itemSelected($event)"
+              formControlName="clusterVal"
+              [ngClass]="{
+                'is-invalid': submitted && f.clusterVal.errors
+              }"
+            >
+              <option value="">Choose Cluster Validation</option>
+              <option *ngFor="let city of clusterValList" [ngValue]="city">
+                {{ city.name }}
+              </option>
+            </select> -->
+
+              <!-- <div
+                *ngIf="submitted && f.clusterVal.errors"
+                class="invalid-feedback"
+              >
+                <div *ngIf="f.clusterVal.errors.required">
+                  Cluster validation is required
+                </div>
+              </div> -->
+
+              <div class="invalid-feedback" *ngIf="submitted && f.clusterVal?.invalid">
+                <sup>*</sup>Please provide city name
+              </div>
+            </td>
+          </tr>
+          <tr>
+            <td>
+              <label class="form-label">Monitoring</label>
+            </td>
+            <td>
+              <ng-select
+                placeholder="-- Select multiple --"
+                [items]="MonitoringList"
+                bindLabel="name"
+                bindValue="id"
+                formControlName="Monitoring"
+                (change)="itemSelected($event)"
+                [multiple]="true"
+                [closeOnSelect]="true"
+              >
+              </ng-select>
+            </td>
+          </tr>
+          <!-- Tools Fields-->
+          <br />
+          <!-- Configuration Fields-->
+          <tr>
+            <label class="bolded">Configuration : </label>
+          </tr>
+          <tr>
+            <input
+              formControlName="config"
+              [(ngModel)]="config"
+              type="radio"
+              [value]="1"
+              [checked]="isChecked"
+            />
+            RBAC &nbsp;&nbsp;
+            <input
+              formControlName="config"
+              [(ngModel)]="config"
+              type="radio"
+              [value]="0"
+              [checked]="!isChecked"
+              (change)="onItemChange('vault')"
+            />
+            Vault integration
+          </tr>
+
+          <tr *ngIf="config === 1">
+            <div class="content">
+              <div style="height: 20%; width: 550px">
+                <td>
+                  <label class="form-label">Create Developer role: </label>
+                </td>
+                <td>
+                  <input
+                    type="text"
+                    formControlName="developerRole"
+                    class="form-control"
+                    [ngClass]="{
+                      'is-invalid': submitted && f.developerRole.errors
+                    }"
+                  />
+                  <div
+                    *ngIf="submitted && f.developerRole.errors"
+                    class="invalid-feedback"
+                  >
+                    <div *ngIf="f.developerRole.errors.required">
+                      Create DevOps role is required
+                    </div>
+                  </div>
+                </td>
+              </div>
+            </div>
+
+            <div class="content">
+              <div style="height: 20%; width: 400px">
+                <td>
+                  <label class="form-label">Create DevOps role</label>
+                </td>
+                <td>
+                  <input
+                    type="text"
+                    formControlName="devOpsrole"
+                    class="form-control"
+                    [ngClass]="{
+                      'is-invalid': submitted && f.devOpsrole.errors
+                    }"
+                  />
+                  <div
+                    *ngIf="submitted && f.devOpsrole.errors"
+                    class="invalid-feedback"
+                  >
+                    <div *ngIf="f.devOpsrole.errors.required">
+                      Create DevOps role is required
+                    </div>
+                  </div>
+                </td>
+              </div>
+            </div>
+          </tr>
+          <tr *ngIf="config === 0">
+            <div class="content">
+              <div style="height: 20%; width: 400px">
+                <td>
+                  <label class="form-label">Terraform Vault:</label>
+                </td>
+                <td>
+                  <input
+                    type="text"
+                    formControlName="terraformVault"
+                    class="form-control"
+                    readonly="true"
+                  />
+                  <!-- <div
+                    *ngIf="submitted && f.terraformVault.errors?.required"
+                    class="invalid-feedback"
+                  >
+                    <div *ngIf="f.terraformVault.errors">
+                      Terraform Vault is required
+                    </div>
+                  </div> -->
+                </td>
+              </div>
+            </div>
+            <div class="content">
+              <div style="height: 20%; width: 400px">
+                <td>
+                  <label class="form-label">Azure key vault</label>
+                </td>
+                <td>
+                  <input
+                    type="text"
+                    formControlName="azureVault"
+                    class="form-control"
+                    readonly="true"
+                  />
+                  <!--
+                    [ngClass]="{
+                      'is-invalid': submitted && f.azureVault.errors
+                    }"<div
+                    *ngIf="submitted && f.azureVault.errors"
+                    class="invalid-feedback"
+                  >
+                    <div *ngIf="f.azureVault.errors.required">
+                      Azure key vault is required
+                    </div>
+                  </div> -->
+                </td>
+              </div>
+            </div>
+          </tr>
+          <!-- Configuration Fields-->
+          <br />
+          <!-- ApplyON Fields-->
+          <tr>
+            <label class="bolded" style="text-align: left">Apply On :</label>
+          </tr>
+          <tr>
+            <input
+              formControlName="applyon"
+              [(ngModel)]="applyon"
+              type="radio"
+              [value]="1"
+              [checked]="isChecked"
+              (change)="onItemChange('repo')"
+            />
+            Registry&nbsp;&nbsp;&nbsp;
+            <input
+              formControlName="applyon"
+              [(ngModel)]="applyon"
+              type="radio"
+              [value]="0"
+              [checked]="!isChecked"
+              (change)="onItemChange('cluster')"
+            />
+            Cluster
+          </tr>
+
+          <tr *ngIf="applyon === 1">
+            <div class="content">
+              <div style="height: 20%; width: 400px">
+                <td>
+                  <label class="form-label">Registry Server: </label>
+                </td>
+                <td>
+                  <input
+                    type="text"
+                    formControlName="registryServer"
+                    class="form-control"
+                    [ngClass]="{
+                      'is-invalid': submitted && f.registryServer.errors
+                    }"
+                  />
+                  <div
+                    *ngIf="submitted && f.registryServer.errors?.required"
+                    class="invalid-feedback"
+                  >
+                    <div *ngIf="f.registryServer.errors">
+                      Registry Server is required
+                    </div>
+                  </div>
+                </td>
+              </div>
+            </div>
+            <div class="content">
+              <div style="height: 20%; width: 400px">
+                <td>
+                  <label class="form-label">Login name:</label>
+                </td>
+                <td>
+                  <input
+                    type="text"
+                    formControlName="loginName"
+                    class="form-control"
+                    [ngClass]="{
+                      'is-invalid': submitted && f.loginName.errors
+                    }"
+                  />
+                  <div
+                    *ngIf="submitted && f.loginName.errors"
+                    class="invalid-feedback"
+                  >
+                    <div *ngIf="f.loginName.errors.required">
+                      Login name is required
+                    </div>
+                  </div>
+                </td>
+                <div class="content">
+                  <div style="height: 20%; width: 400px">
+                    <td>
+                      <label class="form-label">Password:</label>
+                    </td>
+                    <td>
+                      <input
+                        type="text"
+                        formControlName="password"
+                        class="form-control"
+                        [ngClass]="{
+                          'is-invalid': submitted && f.password.errors
+                        }"
+                      />
+                      <div
+                        *ngIf="submitted && f.password.errors"
+                        class="invalid-feedback"
+                      >
+                        <div *ngIf="f.password.errors.required">
+                          Password is required
+                        </div>
+                      </div>
+                    </td>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </tr>
+          <h2 *ngIf="applyon === 0">
+            <input
+              formControlName="clusterType"
+              [(ngModel)]="clusterType"
+              type="radio"
+              [value]="2"
+              [checked]="isClusterChecked"
+              (change)="onItemChange('aws')"
+            />
+            <label style="font-weight: bolder">Azure</label>
+            <input
+              formControlName="clusterType"
+              [(ngModel)]="clusterType"
+              type="radio"
+              [value]="3"
+              [checked]="!isClusterChecked"
+              (change)="onItemChange('azure')"
+            />
+            AWS
+            <tr *ngIf="clusterType === 2">
+              <div class="content">
+                <div style="height: 20%; width: 400px">
+                  <td>
+                    <label class="form-label">Cluster name: </label>
+                  </td>
+                  <td>
+                    <input
+                      type="text"
+                      formControlName="clusterName"
+                      class="form-control"
+                      [ngClass]="{
+                        'is-invalid': submitted && f.clusterName.errors
+                      }"
+                    />
+                    <div
+                      *ngIf="submitted && f.clusterName.errors?.required"
+                      class="invalid-feedback"
+                    >
+                      <div *ngIf="f.clusterName.errors">
+                        Cluster name is required
+                      </div>
+                    </div>
+                  </td>
+                </div>
+              </div>
+              <div class="content">
+                <div style="height: 20%; width: 400px">
+                  <td>
+                    <label class="form-label">Resource Group:</label>
+                  </td>
+                  <td>
+                    <input
+                      type="text"
+                      formControlName="resourceGroup"
+                      class="form-control"
+                      [ngClass]="{
+                        'is-invalid': submitted && f.resourceGroup.errors
+                      }"
+                    />
+                    <div
+                      *ngIf="submitted && f.resourceGroup.errors"
+                      class="invalid-feedback"
+                    >
+                      <div *ngIf="f.resourceGroup.errors.required">
+                        Resource Group is required
+                      </div>
+                    </div>
+                  </td>
+                </div>
+              </div>
+              <div class="content">
+                <div style="height: 20%; width: 400px">
+                  <td>
+                    <label class="form-label">Tenant ID:</label>
+                  </td>
+                  <td>
+                    <input
+                      type="text"
+                      formControlName="tenantID"
+                      class="form-control"
+                      [ngClass]="{
+                        'is-invalid': submitted && f.tenantID.errors
+                      }"
+                    />
+                    <div
+                      *ngIf="submitted && f.tenantID.errors"
+                      class="invalid-feedback"
+                    >
+                      <div *ngIf="f.tenantID.errors.required">
+                        Tenant ID is required
+                      </div>
+                    </div>
+                  </td>
+                </div>
+              </div>
+              <div class="content">
+                <div style="height: 20%; width: 400px">
+                  <td>
+                    <label class="form-label">Subscription:</label>
+                  </td>
+                  <td>
+                    <input
+                      type="text"
+                      formControlName="subscription"
+                      class="form-control"
+                      [ngClass]="{
+                        'is-invalid': submitted && f.subscription.errors
+                      }"
+                    />
+                    <div
+                      *ngIf="submitted && f.subscription.errors"
+                      class="invalid-feedback"
+                    >
+                      <div *ngIf="f.subscription.errors.required">
+                        Subscription is required
+                      </div>
+                    </div>
+                  </td>
+                </div>
+              </div>
+              <div class="content">
+                <div style="height: 20%; width: 400px">
+                  <td>
+                    <label class="form-label">SPN ID:</label>
+                  </td>
+                  <td>
+                    <input
+                      type="text"
+                      formControlName="sPNID"
+                      class="form-control"
+                      [ngClass]="{ 'is-invalid': submitted && f.sPNID.errors }"
+                    />
+                    <div
+                      *ngIf="submitted && f.sPNID.errors"
+                      class="invalid-feedback"
+                    >
+                      <div *ngIf="f.sPNID.errors.required">
+                        SPN ID is required
+                      </div>
+                    </div>
+                  </td>
+                </div>
+              </div>
+              <div class="content">
+                <div style="height: 20%; width: 400px">
+                  <td>
+                    <label class="form-label">SPN Secret:</label>
+                  </td>
+                  <td>
+                    <input
+                      type="text"
+                      formControlName="sPNSecret"
+                      class="form-control"
+                      [ngClass]="{
+                        'is-invalid': submitted && f.sPNSecret.errors
+                      }"
+                    />
+                    <div
+                      *ngIf="submitted && f.sPNSecret.errors"
+                      class="invalid-feedback"
+                    >
+                      <div *ngIf="f.sPNSecret.errors.required">
+                        SPN Secret is required
+                      </div>
+                    </div>
+                  </td>
+                </div>
+              </div>
+            </tr>
+            <tr *ngIf="clusterType === 3">
+              <div style="height: 20%; width: 400px">
+                <td>
+                  <label class="form-label">Cluster name: </label>
+                </td>
+                <td>
+                  <input
+                    type="text"
+                    formControlName="awsclusterName"
+                    class="form-control"
+                    [ngClass]="{
+                      'is-invalid': submitted && f.awsclusterName.errors
+                    }"
+                  />
+                  <div
+                    *ngIf="submitted && f.awsclusterName.errors?.required"
+                    class="invalid-feedback"
+                  >
+                    <div *ngIf="f.awsclusterName.errors">
+                      Cluster name is required
+                    </div>
+                  </div>
+                </td>
+              </div>
+              <div class="content">
+                <div style="height: 20%; width: 400px">
+                  <td>
+                    <label class="form-label">AWS Access Key ID:</label>
+                  </td>
+                  <td>
+                    <input
+                      type="text"
+                      formControlName="aWSID"
+                      class="form-control"
+                      [ngClass]="{ 'is-invalid': submitted && f.aWSID.errors }"
+                    />
+                    <div
+                      *ngIf="submitted && f.aWSID.errors?.required"
+                      class="invalid-feedback"
+                    >
+                      <div *ngIf="f.aWSID.errors">
+                        AWS Access Key ID is required
+                      </div>
+                    </div>
+                  </td>
+                </div>
+              </div>
+              <div class="content">
+                <div style="height: 20%; width: 400px">
+                  <td>
+                    <label class="form-label">AWS Secret Access Key</label>
+                  </td>
+                  <td>
+                    <input
+                      type="text"
+                      formControlName="aWSSecret"
+                      class="form-control"
+                      [ngClass]="{
+                        'is-invalid': submitted && f.aWSSecret.errors
+                      }"
+                    />
+                    <div
+                      *ngIf="submitted && f.aWSSecret.errors"
+                      class="invalid-feedback"
+                    >
+                      <div *ngIf="f.aWSSecret.errors.required">
+                        AWS Secret Access Key is required
+                      </div>
+                    </div>
+                  </td>
+                </div>
+              </div>
+
+              <div class="content">
+                <div style="height: 20%; width: 400px">
+                  <td>
+                    <label class="form-label">Default region name</label>
+                  </td>
+                  <td>
+                    <input
+                      type="text"
+                      formControlName="defaultReg"
+                      class="form-control"
+                      [ngClass]="{
+                        'is-invalid': submitted && f.defaultReg.errors
+                      }"
+                    />
+                    <div
+                      *ngIf="submitted && f.defaultReg.errors"
+                      class="invalid-feedback"
+                    >
+                      <div *ngIf="f.defaultReg.errors.required">
+                        Default region name is required
+                      </div>
+                    </div>
+                  </td>
+                </div>
+              </div>
+            </tr>
+          </h2>
+          <br />
+      </div>
+
+      <div class="text-center">
+        <button class="btn btn-primary me-2">Configuration</button>&nbsp;
+        <button class="btn btn-secondary" type="reset">Cancel</button>
+      </div>
+    </form>
+
+</div>

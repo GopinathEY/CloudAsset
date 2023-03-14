@@ -1,0 +1,29 @@
+/* You can add global styles to this file, and also import other style files */
+@import "~@ng-select/ng-select/themes/default.theme.css";
+
+table {
+  border-collapse: collapse;
+}
+table, th, td {
+  border: 1px  black;
+}
+.error {
+  color: red;
+}
+.success {
+  color: green;
+}
+
+.container {
+  margin-top:    30px;
+  margin-bottom: 30px;
+}
+
+h3 {
+  margin-bottom: 15px;
+}
+
+.highlight {
+  color: blue;
+}
+

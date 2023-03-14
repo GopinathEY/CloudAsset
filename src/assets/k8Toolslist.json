@@ -1,0 +1,78 @@
+{
+  "Ingress": [
+    {
+      "id": "ing_NGINX",
+      "name": "NGINX"
+    },
+    {
+      "id": "ing_Traefik",
+      "name": "Traefik"
+    },
+    {
+      "id": "ing_Kong",
+      "name": "Kong"
+    },
+    {
+      "id": "ing_HAProxy",
+      "name": "HAProxy"
+    }
+  ],
+  "serviceMeshList": [
+    {
+      "id": "sm_Istio",
+      "name": "Istio"
+    },
+    {
+      "id": "sm_Linkerd",
+      "name": "Linkerd"
+    },
+    {
+      "id": "sm_Consul_Connect",
+      "name": "Consul Connect"
+    },
+    {
+      "id": "sm_Kuma",
+      "name": "Kuma"
+    }
+  ],
+  "clusterValList": [
+    {
+      "id": "cluster_kube-bench",
+      "name": "kube-bench"
+    },
+    {
+      "id": "cluster_kubeval",
+      "name": "kubeval"
+    },
+    {
+      "id": "cluster_kube-hunter",
+      "name": "kube-hunter"
+    },
+    {
+      "id": "cluster_Sonobuoy",
+      "name": "Sonobuoy"
+    }
+  ],
+  "MonitoringList": [
+    {
+      "id": "mon_Prometheus",
+      "name": "Prometheus"
+    },
+    {
+      "id": "mon_Grafana",
+      "name": "Grafana"
+    },
+    {
+      "id": "mon_Filebeat/Metricbeat",
+      "name": "Filebeat/Metricbeat"
+    },
+    {
+      "id": "mon_Zabbix",
+      "name": "Zabbix"
+    },
+    {
+      "id": "mon_Sensu",
+      "name": "Sensu"
+    }
+  ]
+}
